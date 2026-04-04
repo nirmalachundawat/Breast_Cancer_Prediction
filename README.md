@@ -183,8 +183,5 @@ gunicorn==23.0.0
 
 ## .gitignore Example
 ```text
-__pycache__/
-venv/
-*.pyc
-.env
+myenv
 ```
