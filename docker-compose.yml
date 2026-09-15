@@ -1,0 +1,12 @@
+services:
+  prediction-app:
+    build: .
+    ports:
+      - "8081:8080"
+    volumes:
+      # Keep MLflow model registration and prediction-monitoring data available
+      # after the container is recreated.
+      - ./mlflow.db:/app/mlflow.db
+      - ./mlruns:/app/mlruns
+      - ./artifacts:/app/artifacts
+    restart: unless-stopped

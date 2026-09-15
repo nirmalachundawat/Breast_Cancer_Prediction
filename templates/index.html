@@ -74,6 +74,11 @@
 
     {% if prediction_text %}
     <h3>{{ prediction_text }}</h3>
+    <p>Estimated probability of malignancy: {{ confidence }}</p>
+    {% endif %}
+
+    {% if error_message %}
+    <p role="alert">{{ error_message }}</p>
     {% endif %}
 </body>
 </html>

@@ -142,6 +142,83 @@ http://127.0.0.1:5000/
 ```
 ---
 
+## MLflow Experiment Tracking
+
+Train and log all four classifiers (Logistic Regression, Random Forest, SVM,
+and XGBoost):
+
+```powershell
+.\.venv\Scripts\python.exe src\tracking\mlflow_tracking.py
+```
+
+In a second terminal, start the UI with the project database already selected:
+
+```powershell
+.\.venv\Scripts\python.exe src\tracking\start_mlflow_ui.py
+```
+
+Open `http://127.0.0.1:5000/`, select the
+`Breast_Cancer_Classification` experiment, and compare its runs and metrics.
+The four trained classifiers are also registered as `BreastCancer_*` models.
+Do not use a plain `mlflow ui` command: it can start against a different local
+store and show an empty page.
+
+---
+
+## Tests
+
+Run the automated validation, model-loading, and Flask endpoint tests:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+---
+
+## Monitoring
+
+Every successful web prediction is recorded locally in
+`artifacts/monitoring/prediction_events.jsonl`. Create a feature-drift report
+against the training dataset with:
+
+```powershell
+.\.venv\Scripts\python.exe -m monitoring.model_monitor
+```
+
+The report is saved to `artifacts/monitoring/drift_report.json`. It needs at
+least 30 prediction events before assessment; then a standardized mean shift of
+`0.5` or higher is flagged for review.
+
+---
+
+## Airflow Retraining
+
+The weekly Airflow DAG validates the dataset, runs tests, retrains and registers
+the MLflow models, then creates a drift report. See
+[`airflow/README.md`](airflow/README.md) for Docker/WSL deployment steps.
+
+---
+
+## Docker Deployment
+
+Build and start the prediction service:
+
+```powershell
+docker compose up --build
+```
+
+Open `http://127.0.0.1:8081/`. Docker health status is available at
+`http://127.0.0.1:8081/health`. The container uses the local MLflow database
+and `mlruns` model artifacts through mounted volumes.
+
+Stop the service with:
+
+```powershell
+docker compose down
+```
+
+---
+
 ## How the Web App Works
 
 1. The user enters all 30 feature values in the form.

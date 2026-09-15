@@ -1,5 +1,7 @@
+.venv
 venv
 .git
 __pycache__
 .ipynb_checkpoints
 *.pyc
+artifacts/monitoring/
