@@ -15,10 +15,6 @@ COPY src ./src
 COPY monitoring ./monitoring
 COPY templates ./templates
 COPY data ./data
-# The local MLflow registry and its model artifacts make the image runnable
-# without a separate tracking server. Compose mounts these paths for persistence.
-COPY mlflow.db .
-COPY mlruns ./mlruns
 
 EXPOSE 8080
 
