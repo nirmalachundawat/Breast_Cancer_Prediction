@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   test-and-build:
 
@@ -33,6 +37,17 @@ jobs:
         run: |
           pytest -v
 
-      - name: Build Docker image
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
         run: |
-          docker build -t breast-cancer-prediction .
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/breast-cancer-prediction
+
+          docker build -t $IMAGE_NAME:latest .
+
+          docker push $IMAGE_NAME:latest
